@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Generator</title>
+    <script defer src="main.js"></script>
+    <script defer src="cell.js"></script>
+    <script defer src="background.js"></script>
+    <script defer src="play.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+        }
+        
+        #main {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+        }
+        
+        #gameHolder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #header {
+            font-size: 50px;
+            text-transform: uppercase;
+            text-align: center;
+            color: lime;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            margin: 10px;
+        }
+        
+        #title {
+            border-radius: 5%;
+            font-size: 30px;
+            text-transform: uppercase;
+            text-align: center;
+            color: lime;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            margin: 10px;
+        }
+        
+        #canvas {
+            border: 2px solid grey;
+        }
+        
+        #holder {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 30px;
+            text-transform: uppercase;
+            color: lime;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            margin: 20px;
+            border-radius: 5%;
+        }
+        
+        .smallHolder {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        #newHolder {
+            display: flex;
+            justify-content: center;
+        }
+        
+        #new {
+            text-align: center;
+            font-size: 30px;
+            text-transform: uppercase;
+            color: lime;
+            padding: 5px 20px;
+            border-radius: 10%;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-style: none;
+            margin: 10px;
+            width: fit-content;
+            box-shadow: 4px 4px 10px black, -2px -2px 5px white;
+        }
+        
+        #new:hover {
+            color: blue;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        #new:active {
+            box-shadow: 2px 2px 5px black, -1px -1px 2px white;
+        }
+        
+        #play {
+            display: none;
+            font-size: 30px;
+            text-transform: uppercase;
+            text-align: center;
+            position: relative;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 10%;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 20px;
+            width: fit-content;
+        }
+        
+        #background {
+            position: absolute;
+            top: 0;
+            z-index: -10;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">Maze Generation Algorithm and Game</div>
+    <div id="main">
+        <div id="gameHolder">
+            <div id="title">
+                <span id="colsShow">cols</span> X <span id="rowsShow">rows</span>
+            </div>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="holder">
+            <div class="smallHolder"><span>Speed </span><input id="speed" type="range" min="1" max="100" value="10"></div>
+            <div class="smallHolder"><span>Rows </span><input id="rows" type="range" min="4" max="40" value="20"></div>
+            <div class="smallHolder"><span>Colums </span><input id="cols" type="range" min="4" max="40" value="20"></div>
+            <div id="newHolder"><button id="new" onclick="start()">New</button></div>
+        </div>
+    </div>
+
+</body>
+<canvas id="background"></canvas>
+
+</html>
