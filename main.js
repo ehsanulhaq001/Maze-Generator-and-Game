@@ -8,9 +8,13 @@ let end;
 let max;
 let c;
 let r;
+let minSteps;
+let stepsTaken;
+
 window.onload = function() {
     start();
 }
+
 start = () => {
     w = 30;
     max = 0;
@@ -20,6 +24,8 @@ start = () => {
     cols = document.querySelector("#cols").value;
     rows = document.querySelector("#rows").value;
     run = setInterval(draw, 1000 / speed);
+    minSteps = stepsTaken = 0;
+    document.querySelector("#outputData").style.display = "none";
 }
 
 index = (i, j) => {
@@ -38,6 +44,12 @@ setup = () => {
     cnv = document.querySelector("#canvas");
     cnv.width = cols * w;
     cnv.height = rows * w;
+    while (cnv.width > window.innerWidth - 100 || cnv.height > window.innerHeight - 100) {
+        w *= 2 / 3;
+        cnv.width = cols * w;
+        cnv.height = rows * w;
+    }
+
     cnv.style.backgroundColor = "#2f3640";
     ctx = cnv.getContext("2d");
     stack = new Array("Extra");
@@ -57,7 +69,6 @@ setup = () => {
 draw = () => {
     ctx.clearRect(0, 0, cnv.width, cnv.height);
 
-
     current.visited = true;
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
@@ -66,6 +77,7 @@ draw = () => {
     }
     current.highlight();
     next = current.randomUnvisitedNeighbour();
+
     if (next) {
         next.visited = true;
 
@@ -78,8 +90,10 @@ draw = () => {
         if (stack.length > max) {
             max = stack.length;
             end = stack[max - 1];
+            minSteps++;
+            console.log("stack.length == ", stack.length, "minSteps ==", minSteps, "i, j ==", current.i, current.j);
+            if (stack.length > minSteps) minSteps = stack.length;
         }
-
     } else if (stack.length > 0) {
         current = stack.pop();
     }
@@ -100,12 +114,15 @@ draw = () => {
 
         start();
     }
+    //start the game
     if (stack.length == 0) {
         clearInterval(run);
         ctx.beginPath();
         ctx.rect(end.i * w + ctx.lineWidth, end.j * w + ctx.lineWidth, w - 2 * ctx.lineWidth, w - 2 * ctx.lineWidth);
         ctx.fillStyle = "red";
         ctx.fill();
+        document.querySelector("#minSteps").innerHTML = minSteps - 3;
+        document.querySelector("#outputData").style.display = "block";
         play(c, r);
     }
 }
@@ -126,67 +143,5 @@ removeWalls = (a, b) => {
     } else if (y === -1) {
         a.walls[2] = false;
         b.walls[0] = false;
-    }
-}
-
-play = (c, r) => {
-    ctx.beginPath();
-    ctx.rect(c * w + ctx.lineWidth, r * w + ctx.lineWidth, w - 2 * ctx.lineWidth, w - 2 * ctx.lineWidth);
-    ctx.fillStyle = "blue";
-    ctx.fill();
-
-    if (c == end.i && r == end.j) {
-        window.alert("You Win");
-    }
-}
-
-
-keyPush = (e) => {
-    console.log("working")
-    switch (e.keyCode) {
-        case 37:
-            if (c > 0 && !grid[index(c - 1, r)].walls[1]) {
-                ctx.beginPath();
-                ctx.rect(c * w + ctx.lineWidth, r * w + ctx.lineWidth, w - 2 * ctx.lineWidth, w - 2 * ctx.lineWidth);
-                ctx.fillStyle = "rgb(21, 34, 34)"
-                ctx.fill();
-                c--;
-                console.log("left")
-                play(c, r);
-            }
-            break;
-        case 38:
-            if (r > 0 && !grid[index(c, r - 1)].walls[2]) {
-                ctx.beginPath();
-                ctx.rect(c * w + ctx.lineWidth, r * w + ctx.lineWidth, w - 2 * ctx.lineWidth, w - 2 * ctx.lineWidth);
-                ctx.fillStyle = "rgb(21, 34, 34)"
-                ctx.fill();
-                r--;
-                console.log("up")
-                play(c, r);
-            }
-            break;
-        case 39:
-            if (c < cols - 1 && !grid[index(c + 1, r)].walls[3]) {
-                ctx.beginPath();
-                ctx.rect(c * w + ctx.lineWidth, r * w + ctx.lineWidth, w - 2 * ctx.lineWidth, w - 2 * ctx.lineWidth);
-                ctx.fillStyle = "rgb(21, 34, 34)"
-                ctx.fill();
-                c++;
-                console.log("right")
-                play(c, r);
-            }
-            break;
-        case 40:
-            if (r < rows - 1 && !grid[index(c, r + 1)].walls[0]) {
-                ctx.beginPath();
-                ctx.rect(c * w + ctx.lineWidth, r * w + ctx.lineWidth, w - 2 * ctx.lineWidth, w - 2 * ctx.lineWidth);
-                ctx.fillStyle = "rgb(21, 34, 34)"
-                ctx.fill();
-                r++;
-                console.log("down")
-                play(c, r);
-            }
-            break;
     }
 }
